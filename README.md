@@ -11,3 +11,7 @@ This script leverages the GitHub Search API to fetch a user-specified number of 
 - **Markdown Formatting:** The repositories' essential details are formatted in Markdown, ready for sharing or web presentation.
 - **Secure Authentication:** The script uses a GitHub personal access token for secure API access.
 - **Recent Updates:** It only fetches repositories that have been updated within the last week.
+
+## NOTE
+
+- The script appends to the output file each time it is run, which could result in a bit of bloating if you're running it over and over, so you may need to manage the output file by occaisionally deleting it or archiving it- will be working on a way to manage this within the script.
