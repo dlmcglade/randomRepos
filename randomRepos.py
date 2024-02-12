@@ -4,88 +4,80 @@ from datetime import datetime, timedelta
 import os
 import argparse
 
-# Set up argument parsing
-parser = argparse.ArgumentParser(description='Fetch random active GitHub repositories')
-parser.add_argument('-n', '--number', type=int, default=5, help='Number of repositories to fetch')
+# Setup argument parsing
+parser = argparse.ArgumentParser(description='Fetch random active GitHub repositories based on recent activity')
+parser.add_argument('-n', '--number', type=int, default=50, help='Number of repositories to fetch')
 args = parser.parse_args()
 
-# Number of repositories to fetch
-num_repos_to_fetch = min(args.number, 1000)  # Limit to 1000 to adhere to practical limits
+# Ensure the GITHUB_TOKEN is set
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+if not GITHUB_TOKEN:
+    print("GITHUB_TOKEN environment variable not set.")
+    exit()
 
-# Function to format the repository information in Markdown
+# GitHub Search API endpoint configuration
+API_URL = "https://api.github.com/search/repositories"
+HEADERS = {"Authorization": f"token {GITHUB_TOKEN}"}
+DATE_ONE_WEEK_AGO = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+
+def fetch_repositories(num_repos):
+    all_repos = []
+    page = 1
+    while len(all_repos) < num_repos:
+        params = {
+            "q": f"pushed:>={DATE_ONE_WEEK_AGO}",
+            "sort": "updated",
+            "order": "desc",
+            "per_page": 100,
+            "page": page
+        }
+        response = requests.get(API_URL, headers=HEADERS, params=params).json()
+        repos = response.get('items', [])
+        if not repos:
+            break  # No more items to fetch
+        all_repos.extend(repos)
+        if len(repos) < 100:  # Less than 100 results indicates last page
+            break
+        page += 1
+    return all_repos[:num_repos]
+
 def format_repo_in_markdown(repo):
-    description = repo['description'] or "No description provided"
-    return f"- **[{repo['name']}]({repo['html_url']})**: {description}\n"
+    return f"- **[{repo['name']}]({repo['html_url']})**: {repo.get('description', 'No description provided')}"
 
-# Calculate the date one week ago in the required format
-one_week_ago = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+def read_and_categorize_existing_file():
+    existing_repos = []
+    try:
+        with open('randomActiveGits.md', 'r') as file:
+            lines = file.readlines()
+            existing_repos = [line.strip() for line in lines if line.startswith("- **[")]
+    except FileNotFoundError:
+        pass
+    return existing_repos
 
-# GitHub Search API endpoint for repositories
-url = "https://api.github.com/search/repositories"
+def update_markdown_file(new_repos, existing_repos):
+    with open('randomActiveGits.md', 'w') as file:
+        if new_repos:
+            file.write("## New Repositories\n")
+            file.write("\n".join(new_repos) + "\n\n")
+        if existing_repos:
+            file.write("## Existing Repositories\n")
+            file.write("\n".join(existing_repos) + "\n")
 
-# Use the GITHUB_TOKEN environment variable
-github_token = os.getenv('GITHUB_TOKEN')  # Get the GITHUB_TOKEN environment variable
+def main():
+    fetched_repos = fetch_repositories(args.number)
+    existing_repos = read_and_categorize_existing_file()
 
-# Make sure you have the GITHUB_TOKEN environment variable set in your environment
-if not github_token:
-    raise ValueError("GITHUB_TOKEN environment variable not set.")
+    # Extract URLs for comparison to identify truly new repos
+    existing_repo_urls = [line.split('](')[1].split(')')[0] for line in existing_repos]
+    new_repos = [format_repo_in_markdown(repo) for repo in fetched_repos if repo['html_url'] not in existing_repo_urls]
 
-headers = {"Authorization": f"token {github_token}"}
+    # Combine new and existing repositories for the update
+    update_markdown_file(new_repos, existing_repos)
 
-repositories = []  # List to hold fetched repositories
+    # Output summary information
+    print(f"New Repositories Found: {len(new_repos)}")
+    total_repos = len(existing_repos) + len(new_repos)  # Correctly count total repositories
+    print(f"Total Repositories in File Now: {total_repos}")
 
-# Make multiple API calls to fetch up to 1000 repositories
-for page in range(1, 11):  # GitHub allows up to 10 pages for search API, 100 items per page
-    params = {
-        "q": f"pushed:>={one_week_ago}",
-        "sort": "updated",
-        "order": "desc",
-        "per_page": 100,
-        "page": page
-    }
-    response = requests.get(url, params=params, headers=headers)
-    data = response.json()
-    repositories.extend(data['items'])
-    # Break if we have fetched all available repositories or reached the desired number
-    if len(repositories) >= num_repos_to_fetch or len(data['items']) < 100:
-        break
-
-# Adjust the number of repositories to fetch based on the actual number of fetched repositories
-num_repos_to_fetch = min(num_repos_to_fetch, len(repositories))
-
-# Randomly select the specified number of repositories from the list
-random_repos = random.sample(repositories, num_repos_to_fetch)
-
-# Load existing data
-try:
-    with open('randomActiveGits.md', 'r') as file:
-        existing_data = file.read()
-except FileNotFoundError:
-    existing_data = ""
-
-# Determine new and duplicate repos
-new_section_label = "## New Repositories\n"
-existing_repos = existing_data.split(new_section_label)[0] if new_section_label in existing_data else existing_data
-new_repos_section = existing_data.split(new_section_label)[1] if new_section_label in existing_data else ""
-
-new_repos = []
-duplicates = []
-for repo in random_repos:
-    repo_markdown = format_repo_in_markdown(repo)
-    if repo_markdown not in existing_data:
-        new_repos.append(repo_markdown)
-    else:
-        duplicates.append(repo_markdown)
-
-# Update the file
-with open('randomActiveGits.md', 'w') as file:
-    if existing_repos.strip():
-        file.write(existing_repos.strip() + "\n\n")
-    if duplicates:
-        file.write("## Duplicates (Previously New)\n")
-        file.write("".join(duplicates) + "\n")
-    if new_repos:
-        file.write(new_section_label)
-        file.write("".join(new_repos))
-
-print(f"Updated randomActiveGits.md with {len(new_repos)} new repositories and {len(duplicates)} duplicates.")
+if __name__ == "__main__":
+    main()
