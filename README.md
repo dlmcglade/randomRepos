@@ -22,18 +22,18 @@ To use this script, you need Python installed on your system. If you don't have 
 2. Navigate to the script's directory.
 3. Install the required dependencies using pip:
 
-    ```bash
-    pip install requests
-    ```
+```
+pip install requests
+```
 
 ## Usage
 Before running the script, ensure you have a GitHub token set as an environment variable `GITHUB_TOKEN`. This token is required to authenticate with the GitHub API and avoid rate limiting.
 
 Run the script with the following command:
 
-    ```
-    python randomRepos.py --number <number_of_repositories>
-    ```
+```
+python randomRepos.py --number <number_of_repositories>
+```
 
 - `--number` (optional): Specify the number of random repositories to fetch. Defaults to 50 if not provided.
 
@@ -49,16 +49,16 @@ Run the script with the following command:
 ## Configuration
 Ensure you have a GitHub token and it's set as an environment variable:
 
-    ```
-    export GITHUB_TOKEN='your_token_here'
-    ```
+```
+export GITHUB_TOKEN='your_token_here'
+```
 
 ## Examples
 Fetching 100 random repositories:
 
-    ```
-    python randomRepos.py --number 100
-    ```
+```
+python randomRepos.py --number 100
+```
 
 ## Troubleshooting
 - **Missing GITHUB_TOKEN**: Make sure you've set the `GITHUB_TOKEN` environment variable as described in the [Configuration](#configuration) section.
