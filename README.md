@@ -33,6 +33,12 @@ To use `Random Repos`, execute the script with Python and specify the desired nu
 python randomRepos.py --number 100
 ```
 
+## Limitations
+
+Be aware that the script uses `GPT-4` by default, so it is up to you to monitor token usage
+
+As an example, `-n 100` fetches took about 7 minutes and used $0.30 at tier 4 as of the latest update.
+
 ## Output
 
 The script outputs 2 files:
