@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`Random Repos` is a Python script designed to fetch random active GitHub repositories based on recent activity and summarize their READMEs. This tool is especially useful for developers looking to discover new projects, trends, or technologies within the GitHub community. Many repositories will not have a README. These are ommitted from the results.
+`Random Repos` is a Python script designed to fetch random active GitHub repositories based on recent activity and summarize their READMEs. This tool is especially useful for developers looking to discover new projects, trends, or technologies within the GitHub community. Many repositories will not have a README. These are ommitted from `repo_summaries.md`, but still tracked in `randomActiveGits.md`.
 
 ## Table of Contents
 
