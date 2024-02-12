@@ -33,6 +33,13 @@ To use `Random Repos`, execute the script with Python and specify the desired nu
 python randomRepos.py --number 100
 ```
 
+## Output
+
+The script outputs 2 files:
+
+`randomActiveGits.md` Keeps track of all of the repositories fetched
+`repo_summaries.md` Contains summaries of only repositories that contain README files
+
 ## Features
 
 - Fetches active GitHub repositories based on recent activity.
