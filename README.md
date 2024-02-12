@@ -6,7 +6,7 @@ This script leverages the GitHub Search API to fetch a user-specified number of 
 
 ## Features
 
-- **Customizable Fetch Quantity:** You can specify the number of repositories to fetch, up to a maximum of 1000. It can be specified by using `-n` followed by the desired number (up to 1000).
+- **Customizable Fetch Quantity:** You can specify the number of repositories to fetch, up to a maximum of 1000. It can be specified by using `-n` followed by the desired number (up to 1000)- although the script may fetch less if there simply aren't that many repositories that have been updated in the last week.
 - **API Pagination Handling:** The script effectively manages API pagination to fetch a large number of repositories.
 - **Markdown Formatting:** The repositories' essential details are formatted in Markdown, ready for sharing or web presentation.
 - **Secure Authentication:** The script uses a GitHub personal access token for secure API access.
