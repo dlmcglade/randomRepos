@@ -56,12 +56,36 @@ num_repos_to_fetch = min(num_repos_to_fetch, len(repositories))
 # Randomly select the specified number of repositories from the list
 random_repos = random.sample(repositories, num_repos_to_fetch)
 
-# Open the Markdown file in append mode
-with open('randomActiveGits.md', 'a') as file:
-    # Write a header with the current date and time
-    file.write(f"\n## Random Active Repositories as of {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Fetching {num_repos_to_fetch} Repositories\n")
-    for repo in random_repos:
-        # Format each repository in Markdown and write to the file
-        file.write(format_repo_in_markdown(repo))
+# Load existing data
+try:
+    with open('randomActiveGits.md', 'r') as file:
+        existing_data = file.read()
+except FileNotFoundError:
+    existing_data = ""
 
-print(f"{num_repos_to_fetch} random active repositories have been appended to randomActiveGits.md.")
+# Determine new and duplicate repos
+new_section_label = "## New Repositories\n"
+existing_repos = existing_data.split(new_section_label)[0] if new_section_label in existing_data else existing_data
+new_repos_section = existing_data.split(new_section_label)[1] if new_section_label in existing_data else ""
+
+new_repos = []
+duplicates = []
+for repo in random_repos:
+    repo_markdown = format_repo_in_markdown(repo)
+    if repo_markdown not in existing_data:
+        new_repos.append(repo_markdown)
+    else:
+        duplicates.append(repo_markdown)
+
+# Update the file
+with open('randomActiveGits.md', 'w') as file:
+    if existing_repos.strip():
+        file.write(existing_repos.strip() + "\n\n")
+    if duplicates:
+        file.write("## Duplicates (Previously New)\n")
+        file.write("".join(duplicates) + "\n")
+    if new_repos:
+        file.write(new_section_label)
+        file.write("".join(new_repos))
+
+print(f"Updated randomActiveGits.md with {len(new_repos)} new repositories and {len(duplicates)} duplicates.")
