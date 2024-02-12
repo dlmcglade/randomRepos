@@ -7,7 +7,7 @@ from openai import OpenAI
 
 # Setup argument parsing
 parser = argparse.ArgumentParser(description='Fetch random active GitHub repositories based on recent activity and summarize their READMEs')
-parser.add_argument('-n', '--number', type=int, default=50, help='Number of repositories to fetch')
+parser.add_argument('-n', '--number', type=int, default=100, help='Number of repositories to fetch')
 args = parser.parse_args()
 
 # Ensure the GITHUB_TOKEN and OPENAI_API_TOKEN are set
