@@ -35,7 +35,7 @@ python randomRepos.py --number 100
 
 ## Limitations
 
-The script is configured to use gpt-3.5-turbo by default, which has a maximum 4096 tokens-per-call limitation, so anything over `-n 130` may result in an `Error Code: 400` on the default model.
+The script is configured to use `gpt-3.5-turbo` by default, which has a maximum 4096 tokens-per-call limitation, so anything over `-n 130` may result in an `Error Code: 400` on the default model.
 
 ## Output
 
