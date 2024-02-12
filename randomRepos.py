@@ -1,8 +1,8 @@
 import requests
 import random
 from datetime import datetime, timedelta
-import os  # Import the os module
-import argparse  # Import the argparse module
+import os
+import argparse
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description='Fetch random active GitHub repositories')
