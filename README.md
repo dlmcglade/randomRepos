@@ -37,7 +37,7 @@ python randomRepos.py --number 100
 
 Be aware that the script uses `GPT-4` by default, so it is up to you to monitor token usage
 
-As an example, `-n 100` fetches took about 7 minutes and used $0.30 at tier 4 as of the latest update.
+As an example, `-n 100` fetches resulted in ~40 summaries written, which took ~7 minutes and used $0.30 at tier 4 as of the latest update.
 
 ## Output
 
