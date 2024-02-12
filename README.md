@@ -21,7 +21,7 @@
 
 To install `Random Repos`, you'll need Python 3.x and `pip`. Clone this repository or download the script directly. Then, install the required dependencies:
 
-```bash
+```
 pip install -r requirements.txt
 ```
 
@@ -29,8 +29,8 @@ pip install -r requirements.txt
 
 To use `Random Repos`, execute the script with Python and specify the desired number of repositories to fetch using the `-n` or `--number` argument:
 
-```bash
-python randomRepos.py --number 50
+```
+python randomRepos.py --number 100
 ```
 
 ## Features
@@ -61,8 +61,14 @@ For more detailed information about each function and its usage, refer to the in
 
 Example of running the script to fetch and summarize 100 repositories:
 
-```bash
-python randomRepos.py --number 100
+```
+python3 randomReposnew.py -n 100
+Script started.
+New Repositories Found: 100
+Total Repositories in File Now: 100
+Summaries Generated: 30
+Script ended.
+Execution Time: 0:02:04.238312
 ```
 
 ## Troubleshooting
