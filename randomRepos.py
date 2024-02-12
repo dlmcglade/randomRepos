@@ -86,7 +86,7 @@ def summarize_content(content):
     """Generate a short summary of the provided content using OpenAI's API."""
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Summarize this content in a short paragraph:\n{content}"}
